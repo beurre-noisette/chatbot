@@ -49,6 +49,22 @@ export const ChatContainer = () => {
         setCurrentConversationId(newConversation.id);
     };
 
+    // 대화 삭제 함수
+    const deleteConversation = (conversationId: string) => {
+        setConversations(prev => prev.filter(conv => conv.id !== conversationId));
+
+        // 현재 보고 있던 대화를 삭제한 경우
+        if (currentConversationId === conversationId) {
+            // 남은 대화가 있으면 첫 번째 대화로 이동, 없으면 null
+            const remainingConversations = conversations.filter(conv => conv.id !== conversationId);
+            if (remainingConversations.length > 0) {
+                setCurrentConversationId(remainingConversations[0].id);
+            } else {
+                setCurrentConversationId(null);
+            }
+        }
+    };
+
     // 메시지 전송 핸들러
     const handleSendMessage = () => {
         const messageContent = inputValue.trim();
@@ -140,6 +156,7 @@ export const ChatContainer = () => {
                 currentConversationId={currentConversationId}
                 onSelectConversation={setCurrentConversationId}
                 onNewConversation={createNewConversation}
+                onDeleteConversation={deleteConversation}
             />
 
             {/* 메인 채팅 영역 */}
